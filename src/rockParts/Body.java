@@ -15,12 +15,22 @@ import java.util.Arrays.*;
  */
 public class Body {
     String name = "Rock";
-    int alive = 25;
-    Organ HP = new Organ(1,10,0);
-    Organ Food= new Organ(2,5,0);
-    Organ Sleep= new Organ(3,5,0);
-    Organ Thirst= new Organ(4,5,0);
-    Organ Fun= new Organ(5,15,0);
+    Boolean alive = true;
+
+
+
+
+
+    Organ HP = new Organ("HP",1,10,0);
+    Organ Food= new Organ("Food",2,10,0);
+    Organ Sleep= new Organ("Sleep",3,5,0);
+    Organ Thirst= new Organ("Thirst",4,5,0);
+    Organ Fun= new Organ("Fun",5,15,0);
+    Organ[] organs = {HP,Food,Sleep,Thirst,Fun};
+    public Body() {
+
+
+    }
 
     public String getName(){return name;}
     public void setHP(){HP.stat = HP.stat+2;}
@@ -43,18 +53,39 @@ public class Body {
     public void setFun(int i){Fun.stat = Fun.stat+i;}
     public int getFun(){return Fun.stat;}
     public void killFun(){if(Fun.stat<=0){Fun.stat=0;} else{Fun.stat--;}}
+    public void fullReport(Body b){
+          System.out.println(HP.name + " " +HP.stat);
+        System.out.println(Food.name + " " +Food.stat);
+        System.out.println(Sleep.name + " " +Sleep.stat);
+        System.out.println(Thirst.name + " " +Thirst.stat);
+        System.out.println(Fun.name + " " +Fun.stat);
 
+    }
 public void bodyCycle(){
-     killHP();
+    killFood();
+    killSleep();
     killFun();
-    killFun();
-    this.alive--;
-    System.out.println("thump thump." + this.alive + " many heartbeats left. HP: " + this.getHP() + "Fun: " + this.getFun());
+    killThirst();
+    bodyEqualize();
+    if(getHP()<=0){
+        alive=false;
+    }
+    if(getFood()<=3){
+        killHP();
+    }
+   else if(getFood()<=Food.maxStat-5){
+        Food bagel = new Food();
+        feedMe(bagel);
+    }
+
+    System.out.println("thump thump." + this.getHP() + " many heartbeats left. Food: " + this.getFood() + "Fun: " + this.getFun());
 }
 public void feedMe(Food f){
     int timeLeft = f.time;
     while(timeLeft>=0){
         this.setHP(f.HP);
+        this.setFood(f.HP);
+        bodyEqualize();
         System.out.println(this.getName() + " is eating " + f.name + "(" + timeLeft + "/" + f.time + ")\nHP: " + this.getHP() );
         timeLeft--;
     }
@@ -64,7 +95,7 @@ public void feedMe(Food f){
         int timeLeft = f.time;
         while(timeLeft>=0){
             this.setHP(f.HP);
-            System.out.println(this.getName() + " is eating " + f.name + "(" + timeLeft + "/" + f.time + ")\nHP: " + this.getHP() );
+            System.out.println(this.getName() + " is playing with " + f.name + "(" + timeLeft + "/" + f.time + ")\nFUn: " + this.getFun() );
             timeLeft--;
         }
         System.out.println("I've Been fed!");
@@ -73,9 +104,21 @@ public void feedMe(Food f){
         public void judge(Body b){
             Food pants = new Food();
             Toy ball = new Toy();
-            Organ[] needs = {b.Fun, b.HP};
-            Arrays.sort(needs);
-            System.out.println(needs[0].OID + " " + needs[0].stat);
+
+            Arrays.sort(organs);
+            System.out.println("JUDGEMENT: " + organs[0].name + " " + organs[0].stat);
         }
+    public void bodyEqualize(){
+        for(int i = 0; i< organs.length; i++)  {
+            if(organs[i].stat<=0){
+                organs[i].stat = 0;
+            }
+            else if (organs[i].stat>= organs[i].maxStat){
+                organs[i].stat = organs[i].maxStat;
+            }
+
+
+        }
+    }
     }
 
