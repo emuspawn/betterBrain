@@ -23,15 +23,19 @@ public class Heart {
     }
 
     public boolean beat(){
-
-     timeNow =heart.getTimeInMillis();
+     Calendar beat = Calendar.getInstance();
+     timeNow = beat.getTimeInMillis();
      timePassed = timeNow - lastUpdate;
-        if(timePassed<=10000){
+        if(timePassed<=1500){
             update = false;
+
             return update;
+
         }
     else{
             update=true;
+            System.out.println(timePassed);
+            lastUpdate=timeNow;
             return update;
         }
    }
